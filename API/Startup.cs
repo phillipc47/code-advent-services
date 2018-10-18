@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using API.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace API
 {
@@ -28,21 +22,31 @@ namespace API
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
 	        DependencyInjection.Configure(services);
+			SwaggerConfiguration.Configure(services);
 		}
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder applicationBuilder, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                applicationBuilder.UseDeveloperExceptionPage();
             }
             else
             {
-                app.UseHsts();
+                applicationBuilder.UseHsts();
             }
 
-            app.UseHttpsRedirection();
-            app.UseMvc();
+			SwaggerConfiguration.Configure(applicationBuilder);
+
+            applicationBuilder.UseHttpsRedirection();
+            applicationBuilder.UseMvc();
+
+			// Make the Swagger UI be the default when a Controller Action is not found
+			applicationBuilder.Run(context =>
+			{
+				context.Response.Redirect("swagger");
+				return Task.CompletedTask;
+			});
         }
     }
 }
