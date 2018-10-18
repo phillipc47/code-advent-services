@@ -17,7 +17,7 @@ namespace API.ReverseCaptcha
 
 
 		[HttpGet]
-		public ActionResult<ReverseCaptchaResult> Get([FromQuery]string input)
+		public ActionResult<ReverseCaptchaResult> Calculate([FromQuery]string input)
 		{
 			if (!int.TryParse(input, out int numericInput))
 			{

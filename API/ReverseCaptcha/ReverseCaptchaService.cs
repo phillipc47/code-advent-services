@@ -16,7 +16,7 @@ namespace API.ReverseCaptcha
 		{
 			var digits = input.ToString().Select(digit => int.Parse((digit.ToString()))).ToArray();
 
-			if (!digits.Any() || digits.Length == 0)
+			if (!digits.Any() || digits.Length <= 1)
 			{
 				return 0;
 			}
