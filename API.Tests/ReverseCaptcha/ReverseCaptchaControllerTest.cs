@@ -9,7 +9,7 @@ namespace API.Tests.ReverseCaptcha
 {
     public class ReverseCaptchaControllerTest
     {
-	    private ReverseCaptchaResult SuccessfulCalculate(ReverseCaptchaController controller, string input)
+	    private CalculationResult SuccessfulCalculate(ReverseCaptchaController controller, string input)
 	    {
 		    var controllerResult = controller.Calculate(input);
 		    var okResult = controllerResult.Result as OkObjectResult;
@@ -17,7 +17,7 @@ namespace API.Tests.ReverseCaptcha
 		    Assert.Equal(200, okResult.StatusCode);
 
 		    Assert.NotNull(okResult.Value);
-		    var reverseCaptchaResult = JsonConvert.DeserializeObject<ReverseCaptchaResult>(okResult.Value.ToString());
+		    var reverseCaptchaResult = JsonConvert.DeserializeObject<CalculationResult>(okResult.Value.ToString());
 
 		    return reverseCaptchaResult;
 	    }

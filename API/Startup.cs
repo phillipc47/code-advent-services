@@ -10,15 +10,16 @@ namespace API
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+	    public IConfiguration Configuration { get; }
+
+		public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
-
         public void ConfigureServices(IServiceCollection services)
         {
+	        services.AddCors();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
 	        DependencyInjection.Configure(services);
@@ -38,15 +39,24 @@ namespace API
 
 			SwaggerConfiguration.Configure(applicationBuilder);
 
-            applicationBuilder.UseHttpsRedirection();
-            applicationBuilder.UseMvc();
+	        applicationBuilder.UseCors
+	        (
+		        _ => _
+			        .AllowAnyOrigin()
+			        .AllowAnyMethod()
+			        .AllowAnyHeader()
+			        .AllowCredentials()
+	        );
 
-			// Make the Swagger UI be the default when a Controller Action is not found
-			applicationBuilder.Run(context =>
-			{
-				context.Response.Redirect("swagger");
-				return Task.CompletedTask;
-			});
+			applicationBuilder
+				.UseHttpsRedirection()
+				.UseMvc()
+				.Run(context =>
+				{
+					// Make the Swagger UI be the default when a Controller Action is not found
+					context.Response.Redirect("swagger");
+					return Task.CompletedTask;
+				});
         }
     }
 }

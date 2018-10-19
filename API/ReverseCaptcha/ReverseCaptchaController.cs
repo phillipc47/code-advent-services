@@ -17,14 +17,14 @@ namespace API.ReverseCaptcha
 
 
 		[HttpGet]
-		public ActionResult<ReverseCaptchaResult> Calculate([FromQuery]string input)
+		public ActionResult<CalculationResult> Calculate([FromQuery]string input)
 		{
 			if (!int.TryParse(input, out int numericInput))
 			{
 				return BadRequest($"Specified input [{input}] is not numeric");
 			}
 
-			var reverseCaptchaResult = new ReverseCaptchaResult()
+			var calculationResult = new CalculationResult()
 			{
 				Input = input,
 				Result = Service.Compute(numericInput).ToString()
@@ -32,7 +32,7 @@ namespace API.ReverseCaptcha
 
 			return Ok
 			(
-				JsonConvert.SerializeObject(reverseCaptchaResult)
+				JsonConvert.SerializeObject(calculationResult)
 			);
 		}
 	}
