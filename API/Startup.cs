@@ -19,10 +19,12 @@ namespace API
 
         public void ConfigureServices(IServiceCollection services)
         {
-	        services.AddCors();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+	        CorsConfiguration.Configure(services);
 
-	        DependencyInjection.Configure(services);
+			IMvcBuilder mvcBuilder = services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+			JsonFormattingConfiguration.Configure(mvcBuilder);
+
+	        DependencyInjectionConfiguration.Configure(services);
 			SwaggerConfiguration.Configure(services);
 		}
 
@@ -37,16 +39,8 @@ namespace API
                 applicationBuilder.UseHsts();
             }
 
+	        CorsConfiguration.Configure(applicationBuilder);
 			SwaggerConfiguration.Configure(applicationBuilder);
-
-	        applicationBuilder.UseCors
-	        (
-		        _ => _
-			        .AllowAnyOrigin()
-			        .AllowAnyMethod()
-			        .AllowAnyHeader()
-			        .AllowCredentials()
-	        );
 
 			applicationBuilder
 				.UseHttpsRedirection()

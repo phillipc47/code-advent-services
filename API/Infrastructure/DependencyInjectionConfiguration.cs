@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace API.Infrastructure
 {
-	public static class DependencyInjection
+	public static class DependencyInjectionConfiguration
 	{
 		public static void Configure(IServiceCollection services)
 		{

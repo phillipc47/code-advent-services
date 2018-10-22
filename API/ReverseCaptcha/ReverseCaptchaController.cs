@@ -30,10 +30,7 @@ namespace API.ReverseCaptcha
 				Result = Service.Compute(numericInput).ToString()
 			};
 
-			return Ok
-			(
-				JsonConvert.SerializeObject(calculationResult)
-			);
+			return Ok( calculationResult );
 		}
 	}
 }
