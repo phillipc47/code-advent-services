@@ -1,0 +1,15 @@
+﻿{
+  "ConfigurationData": {
+    "something": "hello",
+    "serviceEndpoints": [
+      {
+        "keyName": "reverse-captcha",
+        "url": "http://localhost:45603/api/reverseCaptcha"
+      },
+      {
+        "keyName": "another key",
+        "url": "another url"
+      }
+    ]
+  }
+}

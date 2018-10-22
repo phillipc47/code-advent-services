@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-namespace API.ReverseCaptcha.Models
+﻿namespace API.ReverseCaptcha.Models
 {
 	public class CalculationResult
 	{
