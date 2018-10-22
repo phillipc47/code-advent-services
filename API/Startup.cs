@@ -15,7 +15,7 @@ namespace API
 		    services.Configure<Infrastructure.ApplicationConfiguration.ConfigurationData>(options => Configuration.GetSection("ConfigurationData").Bind(options));
 	    }
 
-		public IConfiguration Configuration { get; private set;  }
+		public IConfiguration Configuration { get; private set; }
 
 		public Startup(IConfiguration configuration)
         {
@@ -33,9 +33,9 @@ namespace API
                 applicationBuilder.UseHsts();
             }
 
-	        Configuration = ConfigurationBuilderConfiguration.Configure(applicationBuilder, environment);
-			
-	        CorsConfiguration.Configure(applicationBuilder);
+			Configuration = ConfigurationBuilderConfiguration.Configure(applicationBuilder, environment);
+
+			CorsConfiguration.Configure(applicationBuilder);
 			SwaggerConfiguration.Configure(applicationBuilder);
 
 			applicationBuilder

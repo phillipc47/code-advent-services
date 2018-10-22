@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using API.ConfigurationData.Models;
+﻿using API.ConfigurationData.Models.Response;
+using API.ConfigurationData.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using ConfigurationModel = API.Infrastructure.ApplicationConfiguration;
 
 namespace API.ConfigurationData
 {
@@ -10,27 +8,18 @@ namespace API.ConfigurationData
 	[ApiController]
 	public class ConfigurationDataController : ControllerBase
 	{
-		private ConfigurationModel.ConfigurationData ConfigurationData { get; }
+		private IConfigurationDataService Service { get; }
 
-		public ConfigurationDataController(IOptions<ConfigurationModel.ConfigurationData> configurationDataOptions)
+
+		public ConfigurationDataController(IConfigurationDataService service)
 		{
-			ConfigurationData = configurationDataOptions.Value;
+			Service = service;
 		}
 
 		[HttpGet]
 		public ActionResult<ConfigurationDataResponse> ReadConfiguration()
 		{
-			//TODO: Inject service, etc.....
-			IDictionary<string, ServiceEndpointDetail> endpoints = new Dictionary<string, ServiceEndpointDetail>();
-
-			//TODO: Can use AutoMapper for this
-			foreach (var serviceEndpoint in ConfigurationData.ServiceEndpoints)
-			{
-				endpoints.Add(serviceEndpoint.KeyName, new ServiceEndpointDetail() { Url = serviceEndpoint.Url } );
-			}
-
-			var response = new ConfigurationDataResponse() {ServiceEndpoints = endpoints, Something = ConfigurationData.Something };
-			return Ok(response);
+			return Ok(Service.Lookup());
 		}
 	}
 }
