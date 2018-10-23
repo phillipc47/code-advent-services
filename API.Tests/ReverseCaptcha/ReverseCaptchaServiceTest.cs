@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using API.ReverseCaptcha;
+﻿using API.ReverseCaptcha;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;

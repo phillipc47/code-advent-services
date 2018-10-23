@@ -10,27 +10,21 @@ namespace API
 {
     public class Startup
     {
-	    public IConfiguration Configuration { get; }
+	    private void BindConfiguration(IServiceCollection services)
+	    {
+		    services.Configure<Infrastructure.ApplicationConfiguration.ConfigurationData>(options => Configuration.GetSection("ConfigurationData").Bind(options));
+	    }
+
+		public IConfiguration Configuration { get; private set; }
 
 		public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        public void ConfigureServices(IServiceCollection services)
+        public void Configure(IApplicationBuilder applicationBuilder, IHostingEnvironment environment)
         {
-	        CorsConfiguration.Configure(services);
-
-			IMvcBuilder mvcBuilder = services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-			JsonFormattingConfiguration.Configure(mvcBuilder);
-
-	        DependencyInjectionConfiguration.Configure(services);
-			SwaggerConfiguration.Configure(services);
-		}
-
-        public void Configure(IApplicationBuilder applicationBuilder, IHostingEnvironment env)
-        {
-            if (env.IsDevelopment())
+			if (environment.IsDevelopment())
             {
                 applicationBuilder.UseDeveloperExceptionPage();
             }
@@ -39,7 +33,9 @@ namespace API
                 applicationBuilder.UseHsts();
             }
 
-	        CorsConfiguration.Configure(applicationBuilder);
+			Configuration = ConfigurationBuilderConfiguration.Configure(applicationBuilder, environment);
+
+			CorsConfiguration.Configure(applicationBuilder);
 			SwaggerConfiguration.Configure(applicationBuilder);
 
 			applicationBuilder
@@ -52,5 +48,17 @@ namespace API
 					return Task.CompletedTask;
 				});
         }
-    }
+
+	    public void ConfigureServices(IServiceCollection services)
+	    {
+			BindConfiguration(services);
+			CorsConfiguration.Configure(services);
+
+		    IMvcBuilder mvcBuilder = services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+		    JsonFormattingConfiguration.Configure(mvcBuilder);
+
+		    DependencyInjectionConfiguration.Configure(services);
+		    SwaggerConfiguration.Configure(services);
+	    }
+	}
 }

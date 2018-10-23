@@ -1,6 +1,5 @@
 ﻿using API.ReverseCaptcha.Models;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 
 namespace API.ReverseCaptcha
 {

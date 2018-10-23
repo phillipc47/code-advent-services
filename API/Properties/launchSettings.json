@@ -12,7 +12,8 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "api/reverseCaptcha?input=1111",
+      //"launchUrl": "api/reverseCaptcha?input=1111",
+      "launchUrl": "api/configurationData",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
