@@ -1,6 +1,8 @@
-﻿using API.ConfigurationData.Models.Response;
+﻿using System.Collections.Generic;
+using API.ConfigurationData.Models;
 using API.ConfigurationData.Services;
 using Microsoft.AspNetCore.Mvc;
+using Response = API.ConfigurationData.Models.Response;
 
 namespace API.ConfigurationData
 {
@@ -10,6 +12,26 @@ namespace API.ConfigurationData
 	{
 		private IConfigurationDataService Service { get; }
 
+		private Response.ConfigurationDataResponse CreateResponse(ConfigurationDataEntity configurationDataEntity)
+		{
+			var configurationDataResponse = new Response.ConfigurationDataResponse()
+			{
+				Something = configurationDataEntity.Something,
+				ServiceEndpoints = new Dictionary<string, Response.ServiceEndpointDetail>()
+			};
+			return configurationDataResponse;
+		}
+
+		private void CopyServiceEndpoints(ConfigurationDataEntity configurationDataEntity, Response.ConfigurationDataResponse configurationDataResponse)
+		{
+			if (configurationDataEntity.ServiceEndpoints != null)
+			{
+				foreach (var entityEndpoint in configurationDataEntity.ServiceEndpoints)
+				{
+					configurationDataResponse.ServiceEndpoints.Add(entityEndpoint.Key, new Response.ServiceEndpointDetail() { Url = entityEndpoint.Value.Url });
+				}
+			}
+		}
 
 		public ConfigurationDataController(IConfigurationDataService service)
 		{
@@ -17,9 +39,15 @@ namespace API.ConfigurationData
 		}
 
 		[HttpGet]
-		public ActionResult<ConfigurationDataResponse> ReadConfiguration()
+		public ActionResult<Response.ConfigurationDataResponse> ReadConfiguration()
 		{
-			return Ok(Service.Lookup());
+			var configurationDataEntity = Service.Lookup();
+
+			//TODO: Automap
+			var configurationDataResponse = CreateResponse(configurationDataEntity);
+			CopyServiceEndpoints(configurationDataEntity, configurationDataResponse);
+
+			return Ok(configurationDataResponse);
 		}
 	}
 }
