@@ -17,7 +17,8 @@ namespace API.Tests.ReverseCaptcha
 		    Assert.Equal(200, okResult.StatusCode);
 
 		    Assert.NotNull(okResult.Value);
-		    var reverseCaptchaResult = JsonConvert.DeserializeObject<CalculationResult>(okResult.Value.ToString());
+		    var reverseCaptchaResult = okResult.Value as CalculationResult;
+			Assert.NotNull(reverseCaptchaResult);
 
 		    return reverseCaptchaResult;
 	    }
