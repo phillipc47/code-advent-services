@@ -11,16 +11,36 @@ namespace API.ConfigurationData.Repositories
 
 		private IDictionary<string, EntityModel.ServiceEndpointDetail> BuildEndpoints()
 		{
-			IDictionary<string, EntityModel.ServiceEndpointDetail> endpoints =
-				new Dictionary<string, EntityModel.ServiceEndpointDetail>();
+			IDictionary<string, EntityModel.ServiceEndpointDetail> endpoints = new Dictionary<string, EntityModel.ServiceEndpointDetail>();
 
 			//TODO: Can use AutoMapper for this
-			foreach (var serviceEndpoint in ConfigurationData.ServiceEndpoints)
+			if (ConfigurationData.ServiceEndpoints != null)
 			{
-				endpoints.Add(serviceEndpoint.KeyName, new EntityModel.ServiceEndpointDetail() { Url = serviceEndpoint.Url });
+				foreach (var serviceEndpoint in ConfigurationData.ServiceEndpoints)
+				{
+					endpoints.Add(serviceEndpoint.KeyName, new EntityModel.ServiceEndpointDetail() {Url = serviceEndpoint.Url});
+				}
 			}
 
 			return endpoints;
+		}
+
+		private EntityModel.ConfigurationDataEntity CreateEmptyModel()
+		{
+			return new EntityModel.ConfigurationDataEntity()
+			{
+				ServiceEndpoints = new Dictionary<string, EntityModel.ServiceEndpointDetail>(),
+				Something = string.Empty
+			};
+		}
+
+		private EntityModel.ConfigurationDataEntity CreatePopulatedModel()
+		{
+			return new EntityModel.ConfigurationDataEntity()
+			{
+				Something = ConfigurationData.Something == null ? string.Empty : ConfigurationData.Something,
+				ServiceEndpoints = BuildEndpoints()
+			};
 		}
 
 		public ConfigurationDataRespository(IOptions<APIModel.ConfigurationData> configurationDataOptions)
@@ -30,11 +50,12 @@ namespace API.ConfigurationData.Repositories
 
 		public EntityModel.ConfigurationDataEntity LoadConfigurationData()
 		{
-			return new EntityModel.ConfigurationDataEntity()
+			if (ConfigurationData == null)
 			{
-				Something = ConfigurationData.Something,
-				ServiceEndpoints = BuildEndpoints()
-			};
+				return CreateEmptyModel();
+			}
+
+			return CreatePopulatedModel();
 		}
 	}
 }
