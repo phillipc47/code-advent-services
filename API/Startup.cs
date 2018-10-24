@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using API.Infrastructure;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -54,7 +55,10 @@ namespace API
 			BindConfiguration(services);
 			CorsConfiguration.Configure(services);
 
-		    IMvcBuilder mvcBuilder = services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+		    IMvcBuilder mvcBuilder = services
+			    .AddAutoMapper()
+			    .AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+										
 		    JsonFormattingConfiguration.Configure(mvcBuilder);
 
 		    DependencyInjectionConfiguration.Configure(services);

@@ -1,5 +1,6 @@
 ﻿using API.ReverseCaptcha.Models;
 using Microsoft.AspNetCore.Mvc;
+using ReverseCaptcha;
 
 namespace API.ReverseCaptcha
 {
@@ -14,16 +15,15 @@ namespace API.ReverseCaptcha
 			Service = service;
 		}
 
-
 		[HttpGet]
-		public ActionResult<CalculationResult> Calculate([FromQuery]string input)
+		public ActionResult<ReverseCaptchaResponse> Calculate([FromQuery]string input)
 		{
 			if (!int.TryParse(input, out int numericInput))
 			{
 				return BadRequest($"Specified input [{input}] is not numeric");
 			}
 
-			var calculationResult = new CalculationResult()
+			var calculationResult = new ReverseCaptchaResponse()
 			{
 				Input = input,
 				Result = Service.Compute(numericInput).ToString()

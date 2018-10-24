@@ -1,7 +1,7 @@
 ﻿using API.ConfigurationData.Repositories;
 using API.ConfigurationData.Services;
-using API.ReverseCaptcha;
 using Microsoft.Extensions.DependencyInjection;
+using ReverseCaptcha;
 
 namespace API.Infrastructure
 {

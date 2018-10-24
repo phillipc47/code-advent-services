@@ -2,14 +2,14 @@
 using API.ReverseCaptcha.Models;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using Newtonsoft.Json;
+using ReverseCaptcha;
 using Xunit;
 
 namespace API.Tests.ReverseCaptcha
 {
     public class ReverseCaptchaControllerTest
     {
-	    private CalculationResult SuccessfulCalculate(ReverseCaptchaController controller, string input)
+	    private ReverseCaptchaResponse SuccessfulCalculate(ReverseCaptchaController controller, string input)
 	    {
 		    var controllerResult = controller.Calculate(input);
 		    var okResult = controllerResult.Result as OkObjectResult;
@@ -17,7 +17,7 @@ namespace API.Tests.ReverseCaptcha
 		    Assert.Equal(200, okResult.StatusCode);
 
 		    Assert.NotNull(okResult.Value);
-		    var reverseCaptchaResult = okResult.Value as CalculationResult;
+		    var reverseCaptchaResult = okResult.Value as ReverseCaptchaResponse;
 			Assert.NotNull(reverseCaptchaResult);
 
 		    return reverseCaptchaResult;
