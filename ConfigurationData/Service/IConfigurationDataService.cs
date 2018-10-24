@@ -1,6 +1,6 @@
-﻿using API.ConfigurationData.Models;
+﻿using Domain.Models;
 
-namespace API.ConfigurationData.Services
+namespace ConfigurationData.Service
 {
 
 	public interface IConfigurationDataService

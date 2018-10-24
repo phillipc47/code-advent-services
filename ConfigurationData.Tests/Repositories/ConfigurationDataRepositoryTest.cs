@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 using API.ConfigurationData.Repositories;
+using Domain.Models;
 using Microsoft.Extensions.Options;
 using Moq;
 using Xunit;
-using APIModel = API.Infrastructure.ApplicationConfiguration;
-using EntityModel = API.ConfigurationData.Models;
 
-namespace API.Tests.ConfigurationData.Repositories
+namespace ConfigurationData.Tests.Repositories
 {
 	public class ConfigurationDataRepositoryTest
 	{
@@ -14,13 +13,13 @@ namespace API.Tests.ConfigurationData.Repositories
 		public void LoadConfiguration_Uses_Injected_Configuration_Model()
 		{
 			var expectedConfigurationModel =
-				new APIModel.ConfigurationData
+				new Domain.Infrastructure.ApplicationConfiguration.ConfigurationData
 				{
-					ServiceEndpoints = new List<APIModel.ServiceEndpointDetail>(),
+					ServiceEndpoints = new List<Domain.Infrastructure.ApplicationConfiguration.ServiceEndpointDetail>(),
 					Something = "something"
 				};
 
-			var mockRepository = new Mock<IOptions<APIModel.ConfigurationData>>();
+			var mockRepository = new Mock<IOptions<Domain.Infrastructure.ApplicationConfiguration.ConfigurationData>>();
 			mockRepository.Setup(options => options.Value).Returns(expectedConfigurationModel);
 
 			var repository = new ConfigurationDataRespository(mockRepository.Object);
@@ -36,8 +35,8 @@ namespace API.Tests.ConfigurationData.Repositories
 		[Fact]
 		public void LoadConfiguration_No_Configuration_Model()
 		{
-			var mockRepository = new Mock<IOptions<APIModel.ConfigurationData>>();
-			mockRepository.Setup(options => options.Value).Returns((APIModel.ConfigurationData) null);
+			var mockRepository = new Mock<IOptions<Domain.Infrastructure.ApplicationConfiguration.ConfigurationData>>();
+			mockRepository.Setup(options => options.Value).Returns((Domain.Infrastructure.ApplicationConfiguration.ConfigurationData) null);
 
 			var repository = new ConfigurationDataRespository(mockRepository.Object);
 			var entityModelResult = repository.LoadConfigurationData();
@@ -53,13 +52,13 @@ namespace API.Tests.ConfigurationData.Repositories
 		public void LoadConfiguration_No_Something()
 		{
 			var expectedConfigurationModel =
-				new APIModel.ConfigurationData
+				new Domain.Infrastructure.ApplicationConfiguration.ConfigurationData
 				{
-					ServiceEndpoints = new List<APIModel.ServiceEndpointDetail>(),
+					ServiceEndpoints = new List<Domain.Infrastructure.ApplicationConfiguration.ServiceEndpointDetail>(),
 					Something = null
 				};
 
-			var mockRepository = new Mock<IOptions<APIModel.ConfigurationData>>();
+			var mockRepository = new Mock<IOptions<Domain.Infrastructure.ApplicationConfiguration.ConfigurationData>>();
 			mockRepository.Setup(options => options.Value).Returns(expectedConfigurationModel);
 
 			var repository = new ConfigurationDataRespository(mockRepository.Object);
@@ -70,9 +69,9 @@ namespace API.Tests.ConfigurationData.Repositories
 			Assert.Equal(string.Empty, entityModelResult.Something);
 		}
 
-		private void CheckEndpoint(APIModel.ServiceEndpointDetail apiEndpoint, EntityModel.ConfigurationDataEntity entityModel)
+		private void CheckEndpoint(Domain.Infrastructure.ApplicationConfiguration.ServiceEndpointDetail apiEndpoint, ConfigurationDataEntity entityModel)
 		{
-			EntityModel.ServiceEndpointDetail entityEndpoint = entityModel.ServiceEndpoints[apiEndpoint.KeyName];
+			ServiceEndpointDetail entityEndpoint = entityModel.ServiceEndpoints[apiEndpoint.KeyName];
 			Assert.NotNull(entityEndpoint);
 			Assert.Equal(apiEndpoint.Url, entityEndpoint.Url);
 		}
@@ -80,20 +79,20 @@ namespace API.Tests.ConfigurationData.Repositories
 		[Fact]
 		public void LoadConfiguration_Copies_Over_Endpoints()
 		{
-			var expectedServiceEndpoints = new List<APIModel.ServiceEndpointDetail>
+			var expectedServiceEndpoints = new List<Domain.Infrastructure.ApplicationConfiguration.ServiceEndpointDetail>
 			{
-				new APIModel.ServiceEndpointDetail() {KeyName = "firstKey", Url = "first url"},
-				new APIModel.ServiceEndpointDetail() {KeyName = "secondKey", Url = "second url"}
+				new Domain.Infrastructure.ApplicationConfiguration.ServiceEndpointDetail() {KeyName = "firstKey", Url = "first url"},
+				new Domain.Infrastructure.ApplicationConfiguration.ServiceEndpointDetail() {KeyName = "secondKey", Url = "second url"}
 			};
 
 			var expectedConfigurationModel =
-				new APIModel.ConfigurationData
+				new Domain.Infrastructure.ApplicationConfiguration.ConfigurationData
 				{
 					ServiceEndpoints = expectedServiceEndpoints,
 					Something = "does not matter for this test"
 				};
 
-			var mockRepository = new Mock<IOptions<APIModel.ConfigurationData>>();
+			var mockRepository = new Mock<IOptions<Domain.Infrastructure.ApplicationConfiguration.ConfigurationData>>();
 			mockRepository.Setup(options => options.Value).Returns(expectedConfigurationModel);
 
 			var repository = new ConfigurationDataRespository(mockRepository.Object);

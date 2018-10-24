@@ -13,7 +13,7 @@ namespace API
     {
 	    private void BindConfiguration(IServiceCollection services)
 	    {
-		    services.Configure<Infrastructure.ApplicationConfiguration.ConfigurationData>(options => Configuration.GetSection("ConfigurationData").Bind(options));
+		    services.Configure<Domain.Infrastructure.ApplicationConfiguration.ConfigurationData>(options => Configuration.GetSection("ConfigurationData").Bind(options));
 	    }
 
 		public IConfiguration Configuration { get; private set; }

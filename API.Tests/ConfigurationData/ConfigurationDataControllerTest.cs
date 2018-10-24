@@ -1,15 +1,15 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using API.ConfigurationData;
-using API.ConfigurationData.Models;
 using API.ConfigurationData.Models.Response;
-using API.ConfigurationData.Services;
+using ConfigurationData.Service;
+using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
-using ServiceEndpointDetail = API.ConfigurationData.Models.ServiceEndpointDetail;
+using ServiceEndpointDetail = Domain.Models.ServiceEndpointDetail;
 
-namespace API.Tests
+namespace API.Tests.ConfigurationData
 {
 	public class ConfigurationDataControllerTest
 	{

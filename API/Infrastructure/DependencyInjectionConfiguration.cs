@@ -1,5 +1,6 @@
 ﻿using API.ConfigurationData.Repositories;
 using API.ConfigurationData.Services;
+using ConfigurationData.Service;
 using Microsoft.Extensions.DependencyInjection;
 using ReverseCaptcha;
 

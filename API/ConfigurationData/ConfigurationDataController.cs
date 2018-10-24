@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using API.ConfigurationData.Models;
-using API.ConfigurationData.Services;
+using ConfigurationData.Service;
+using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Response = API.ConfigurationData.Models.Response;
 
