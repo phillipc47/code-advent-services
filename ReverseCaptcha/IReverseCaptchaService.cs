@@ -1,4 +1,4 @@
-﻿namespace API.ReverseCaptcha
+﻿namespace ReverseCaptcha
 {
 	public interface IReverseCaptchaService
 	{

@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using Microsoft.Extensions.Logging;
 
-namespace API.ReverseCaptcha
+namespace ReverseCaptcha
 {
 	public class ReverseCaptchaService : IReverseCaptchaService
 	{

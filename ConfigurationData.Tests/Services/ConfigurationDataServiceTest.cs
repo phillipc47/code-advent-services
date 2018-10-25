@@ -1,10 +1,11 @@
-﻿using API.ConfigurationData.Models;
-using API.ConfigurationData.Repositories;
+﻿using API.ConfigurationData.Repositories;
 using API.ConfigurationData.Services;
+using ConfigurationData.Service;
+using Domain.Models;
 using Moq;
 using Xunit;
 
-namespace API.Tests.ConfigurationData.Services
+namespace ConfigurationData.Tests.Services
 {
 	public class ConfigurationDataServiceTest
 	{

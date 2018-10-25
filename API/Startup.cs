@@ -1,5 +1,7 @@
 ﻿using System.Threading.Tasks;
+using API.ConfigurationData.Models.Response;
 using API.Infrastructure;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +14,7 @@ namespace API
     {
 	    private void BindConfiguration(IServiceCollection services)
 	    {
-		    services.Configure<Infrastructure.ApplicationConfiguration.ConfigurationData>(options => Configuration.GetSection("ConfigurationData").Bind(options));
+		    services.Configure<Domain.Infrastructure.ApplicationConfiguration.ConfigurationData>(options => Configuration.GetSection("ConfigurationData").Bind(options));
 	    }
 
 		public IConfiguration Configuration { get; private set; }
@@ -54,7 +56,10 @@ namespace API
 			BindConfiguration(services);
 			CorsConfiguration.Configure(services);
 
-		    IMvcBuilder mvcBuilder = services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+		    IMvcBuilder mvcBuilder = services
+			    .AddAutoMapper()
+			    .AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+										
 		    JsonFormattingConfiguration.Configure(mvcBuilder);
 
 		    DependencyInjectionConfiguration.Configure(services);

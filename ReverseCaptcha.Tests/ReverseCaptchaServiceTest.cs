@@ -1,9 +1,8 @@
-﻿using API.ReverseCaptcha;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 
-namespace API.Tests.ReverseCaptcha
+namespace ReverseCaptcha.Tests
 {
 	public class ReverseCaptchaServiceTest
 	{
