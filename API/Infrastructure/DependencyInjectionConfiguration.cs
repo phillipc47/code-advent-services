@@ -1,6 +1,7 @@
 ﻿using API.ConfigurationData.Repositories;
 using API.ConfigurationData.Services;
-using CheckSum.Validation;
+using CheckSum.Services;
+using CheckSum.Validators;
 using ConfigurationData.Service;
 using Microsoft.Extensions.DependencyInjection;
 using ReverseCaptcha;
@@ -17,6 +18,7 @@ namespace API.Infrastructure
 			services.AddScoped<IConfigurationDataService, ConfigurationDataService>();
 			services.AddScoped<IConfigurationDataRepository, ConfigurationDataRespository>();
 
+			services.AddScoped<ICheckSumService, CheckSumService>();
 		}
 	}
 }

@@ -1,6 +1,6 @@
 ﻿using Domain.Models;
 
-namespace CheckSum.Validation
+namespace CheckSum.Validators
 {
 	public interface INumericValidator
 	{

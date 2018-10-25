@@ -1,4 +1,4 @@
-﻿using CheckSum.Validation;
+﻿using CheckSum.Validators;
 using Domain.Models;
 using Xunit;
 

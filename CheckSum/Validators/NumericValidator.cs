@@ -2,7 +2,7 @@
 using System.Linq;
 using Domain.Models;
 
-namespace CheckSum.Validation
+namespace CheckSum.Validators
 {
 	public class NumericValidator : INumericValidator
 	{

@@ -1,6 +1,6 @@
 ﻿using API.CheckSum.Models;
-using CheckSum.Validation;
-using Domain.Models;
+using CheckSum.Services;
+using CheckSum.Validators;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.CheckSum
@@ -10,23 +10,30 @@ namespace API.CheckSum
 	public class CheckSumController : ControllerBase
 	{
 		private INumericValidator Validator { get; }
+		private ICheckSumService Service { get; }
 
-		public CheckSumController(INumericValidator validator)
+		public CheckSumController(INumericValidator validator, ICheckSumService service)
 		{
 			Validator = validator;
+			Service = service;
 		}
 
 		[HttpGet]
 		public ActionResult<CheckSumResponse> Calculate([FromQuery] string input)
 		{
-			NumericValidationResultEntity numericValidationResult = Validator.Validate(input);
+			var numericValidationResult = Validator.Validate(input);
 			if (!numericValidationResult.ValidationResult.IsValid)
 			{
 				return BadRequest(numericValidationResult.ValidationResult.Messages);
 			}
 
-			//TODO: Invoke service
-			return Ok(numericValidationResult.Input);
+			CheckSumResponse response = new CheckSumResponse()
+			{
+				CheckSum = Service.Compute(numericValidationResult.Input).ToString(),
+				InputRows = numericValidationResult.Input
+			};
+
+			return Ok(response);
 		}
 	}
 }
