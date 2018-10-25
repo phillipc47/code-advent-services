@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using Domain.Models;
 using Microsoft.Extensions.Options;
+using DomainConfiguration = Domain.Infrastructure.ApplicationConfiguration;
 
 namespace API.ConfigurationData.Repositories
 {
 	public class ConfigurationDataRespository: IConfigurationDataRepository
 	{
-		private Domain.Infrastructure.ApplicationConfiguration.ConfigurationData ConfigurationData { get; }
+		private DomainConfiguration.ConfigurationData ConfigurationData { get; }
 
 		private IDictionary<string, ServiceEndpointDetail> BuildEndpoints()
 		{
@@ -42,7 +43,7 @@ namespace API.ConfigurationData.Repositories
 			};
 		}
 
-		public ConfigurationDataRespository(IOptions<Domain.Infrastructure.ApplicationConfiguration.ConfigurationData> configurationDataOptions)
+		public ConfigurationDataRespository(IOptions<DomainConfiguration.ConfigurationData> configurationDataOptions)
 		{
 			ConfigurationData = configurationDataOptions.Value;
 		}

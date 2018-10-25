@@ -10,7 +10,7 @@ namespace Domain.Models
 
 	public class ConfigurationDataEntity
 	{
-		public IDictionary<string, ServiceEndpointDetail> ServiceEndpoints;
+		public IDictionary<string, ServiceEndpointDetail> ServiceEndpoints = new Dictionary<string, ServiceEndpointDetail>();
 
 		public string Something { get; set; }
 	}

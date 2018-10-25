@@ -4,6 +4,7 @@ namespace Domain.Infrastructure.ApplicationConfiguration
 {
 	public class ServiceEndpointDetail
 	{
+		//public string KeyName { get; set; }
 		public string KeyName { get; set; }
 		public string Url { get; set; }
 	}

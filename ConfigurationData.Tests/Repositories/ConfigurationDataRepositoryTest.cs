@@ -36,7 +36,7 @@ namespace ConfigurationData.Tests.Repositories
 		public void LoadConfiguration_No_Configuration_Model()
 		{
 			var mockRepository = new Mock<IOptions<Domain.Infrastructure.ApplicationConfiguration.ConfigurationData>>();
-			mockRepository.Setup(options => options.Value).Returns((Domain.Infrastructure.ApplicationConfiguration.ConfigurationData) null);
+			mockRepository.Setup(options => options.Value).Returns((Domain.Infrastructure.ApplicationConfiguration.ConfigurationData)null);
 
 			var repository = new ConfigurationDataRespository(mockRepository.Object);
 			var entityModelResult = repository.LoadConfigurationData();

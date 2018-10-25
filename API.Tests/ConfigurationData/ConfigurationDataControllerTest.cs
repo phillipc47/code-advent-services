@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
-using System.Collections.Generic;
 using API.ConfigurationData;
 using API.ConfigurationData.Models.Response;
+using AutoMapper;
 using ConfigurationData.Service;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -29,76 +29,41 @@ namespace API.Tests.ConfigurationData
 			return result;
 		}
 
+		private IMapper SetupMapper(ConfigurationDataResponse expectedResponse)
+		{
+			var mockMapper = new Mock<IMapper>();
+			mockMapper.Setup(mapper => mapper.Map<ConfigurationDataResponse>(It.IsAny<ConfigurationDataEntity>()))
+				.Returns(expectedResponse);
+
+			return mockMapper.Object;
+		}
+
 		private IConfigurationDataService SetupConfigurationDataService(ConfigurationDataEntity expectedResult)
 		{
-			var mockRepository = new Mock<IConfigurationDataService>();
-			mockRepository.Setup(service => service.Lookup()).Returns(expectedResult);
+			var mockService = new Mock<IConfigurationDataService>();
+			mockService.Setup(service => service.Lookup()).Returns(expectedResult);
 
-			return mockRepository.Object;
+			return mockService.Object;
 		}
 
 
 		[Fact]
 		public void ReadConfiguration_Delegates_To_Service()
 		{
-			ConfigurationDataEntity expectedResult = new ConfigurationDataEntity()
+			ConfigurationDataEntity expectedEntity = new ConfigurationDataEntity()
 			{
 				Something = "some data",
 				ServiceEndpoints = new ConcurrentDictionary<string, ServiceEndpointDetail>()
 			};
-			IConfigurationDataService service = SetupConfigurationDataService(expectedResult);
+			IConfigurationDataService service = SetupConfigurationDataService(expectedEntity);
 
-			var controller = new ConfigurationDataController(service);
-			var result = SuccessfulRead(controller);
+			ConfigurationDataResponse expectedResponse = new ConfigurationDataResponse();
+			IMapper mapper = SetupMapper(expectedResponse);
 
-			Assert.Equal(expectedResult.Something, result.Something);
-			Assert.Equal(expectedResult.ServiceEndpoints.Count, result.ServiceEndpoints.Count);
-		}
+			var controller = new ConfigurationDataController(service, mapper);
+			var response = SuccessfulRead(controller);
 
-		[Fact]
-		public void ReadConfiguration_Without_Service_Endpoints()
-		{
-			ConfigurationDataEntity expectedResult = new ConfigurationDataEntity()
-			{
-				Something = "some data",
-				ServiceEndpoints = null
-			};
-			IConfigurationDataService service = SetupConfigurationDataService(expectedResult);
-
-			var controller = new ConfigurationDataController(service);
-			var result = SuccessfulRead(controller);
-
-			Assert.Equal(expectedResult.Something, result.Something);
-
-			Assert.NotNull(result.ServiceEndpoints);
-			Assert.Equal(0, result.ServiceEndpoints.Count);
-		}
-
-		[Fact]
-		public void ReadConfiguration_Copies_Every_Service_Endpoint()
-		{
-			IDictionary<string, ServiceEndpointDetail> serviceEndpoints = new Dictionary<string, ServiceEndpointDetail>();
-			serviceEndpoints.Add("key1", new ServiceEndpointDetail() {Url = "url1"} );
-			serviceEndpoints.Add("key2", new ServiceEndpointDetail() {Url = "url2" } );
-
-			ConfigurationDataEntity expectedResult = new ConfigurationDataEntity()
-			{
-				Something = "some other data",
-				ServiceEndpoints = serviceEndpoints
-			};
-			IConfigurationDataService service = SetupConfigurationDataService(expectedResult);
-
-			var controller = new ConfigurationDataController(service);
-			var result = SuccessfulRead(controller);
-
-			Assert.Equal(expectedResult.Something, result.Something);
-
-			// We can modularize the endpoint checks if we have future need of such methods
-			Assert.NotNull(result.ServiceEndpoints);
-			Assert.Equal(expectedResult.ServiceEndpoints.Count, result.ServiceEndpoints.Count);
-
-			Assert.Equal(expectedResult.ServiceEndpoints["key1"].Url, result.ServiceEndpoints["key1"].Url);
-			Assert.Equal(expectedResult.ServiceEndpoints["key2"].Url, result.ServiceEndpoints["key2"].Url);
+			Assert.Same(expectedResponse, response);
 		}
 	}
 }
