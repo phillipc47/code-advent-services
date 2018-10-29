@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CheckSum\CheckSum.csproj" />
     <ProjectReference Include="..\ConfigurationData\ConfigurationData.csproj" />
     <ProjectReference Include="..\Domain\Domain.csproj" />
     <ProjectReference Include="..\ReverseCaptcha\ReverseCaptcha.csproj" />

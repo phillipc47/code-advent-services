@@ -1,4 +1,4 @@
-﻿namespace API.ReverseCaptcha.Models
+﻿namespace ReverseCaptcha.Models
 {
 	public class CalculationResult
 	{
