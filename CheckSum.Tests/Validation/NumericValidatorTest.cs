@@ -58,9 +58,9 @@ namespace CheckSum.Tests.Validation
 
 		[Theory]
 		[InlineData("5")]
-		[InlineData("1")]
-		[InlineData("3")]
-		public void Validate_One_Number(string input)
+		[InlineData("10")]
+		[InlineData("3375890")]
+		public void Validate_One_Number_Per_Row(string input)
 		{
 			var validator = CreateValidator();
 
@@ -102,7 +102,5 @@ namespace CheckSum.Tests.Validation
 
 			CheckFailedValidation(result);
 		}
-
-
 	}
 }

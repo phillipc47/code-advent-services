@@ -4,7 +4,8 @@ namespace API.CheckSum.Models
 {
 	public class CheckSumResponse
 	{
-		public IList<IList<int>> InputRows { get; set; }
-		public string CheckSum { get; set; }
+		public string Input { get; set; }
+		public IList<IList<int>> InputRows { get; set; } = new List<IList<int>>();
+		public string Result { get; set; }
 	}
 }

@@ -27,9 +27,10 @@ namespace API.CheckSum
 				return BadRequest(numericValidationResult.ValidationResult.Messages);
 			}
 
-			CheckSumResponse response = new CheckSumResponse()
+			var response = new CheckSumResponse()
 			{
-				CheckSum = Service.Compute(numericValidationResult.Input).ToString(),
+				Result = Service.Compute(numericValidationResult.Input).ToString(),
+				Input = input,
 				InputRows = numericValidationResult.Input
 			};
 
