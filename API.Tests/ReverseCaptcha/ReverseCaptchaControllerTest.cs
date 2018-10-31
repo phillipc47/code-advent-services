@@ -1,6 +1,5 @@
 ﻿using API.ReverseCaptcha;
 using API.ReverseCaptcha.Models;
-using Microsoft.AspNetCore.Mvc;
 using Moq;
 using ReverseCaptcha;
 using Xunit;
@@ -12,15 +11,7 @@ namespace API.Tests.ReverseCaptcha
 	    private ReverseCaptchaResponse SuccessfulCalculate(ReverseCaptchaController controller, string input)
 	    {
 		    var controllerResult = controller.Calculate(input);
-		    var okResult = controllerResult.Result as OkObjectResult;
-		    Assert.NotNull(okResult);
-		    Assert.Equal(200, okResult.StatusCode);
-
-		    Assert.NotNull(okResult.Value);
-		    var reverseCaptchaResult = okResult.Value as ReverseCaptchaResponse;
-			Assert.NotNull(reverseCaptchaResult);
-
-		    return reverseCaptchaResult;
+		    return ControllerTestHelper<ReverseCaptchaResponse>.Successful(controllerResult);
 	    }
 
 	    [Fact]
@@ -55,8 +46,8 @@ namespace API.Tests.ReverseCaptcha
 			var controller = new ReverseCaptchaController(mockRepository.Object);
 
 		    var controllerResult = controller.Calculate(controllerInput);
-			var badRequestResult = controllerResult.Result as BadRequestObjectResult;
-			Assert.NotNull(badRequestResult);
+
+			ControllerTestHelper<ReverseCaptchaResponse>.BadRequestResult(controllerResult);
 	    }
     }
 }

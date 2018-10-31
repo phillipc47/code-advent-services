@@ -4,7 +4,6 @@ using API.CheckSum.Models;
 using CheckSum.Services;
 using CheckSum.Validators;
 using Domain.Models;
-using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
 
@@ -37,15 +36,7 @@ namespace API.Tests.CheckSum
 		private CheckSumResponse SuccessfulCompute(CheckSumController controller, string input)
 		{
 			var controllerResult = controller.Calculate(input);
-			var okResult = controllerResult.Result as OkObjectResult;
-			Assert.NotNull(okResult);
-			Assert.Equal(200, okResult.StatusCode);
-
-			Assert.NotNull(okResult.Value);
-			var result = okResult.Value as CheckSumResponse;
-			Assert.NotNull(result);
-
-			return result;
+			return ControllerTestHelper<CheckSumResponse>.Successful(controllerResult);
 		}
 
 		[Fact]
@@ -58,8 +49,7 @@ namespace API.Tests.CheckSum
 			var controller = new CheckSumController(validatorRepository.Object, serviceRepository.Object);
 			var controllerResult = controller.Calculate(input);
 
-			var badRequestResult = controllerResult.Result as BadRequestObjectResult;
-			Assert.NotNull(badRequestResult);
+			ControllerTestHelper<CheckSumResponse>.BadRequestResult(controllerResult);
 
 			validatorRepository.Verify( validator => validator.Validate(input), Times.Once );
 			serviceRepository.Verify( service => service.Compute(null), Times.Never);
