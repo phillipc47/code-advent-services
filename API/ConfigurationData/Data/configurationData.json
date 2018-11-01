@@ -7,8 +7,12 @@
         "url": "http://localhost:45603/api/reverseCaptcha"
       },
       {
-        "keyName": "checksum",
+        "keyName": "check-sum",
         "url": "http://localhost:45603/api/checkSum"
+      },
+      {
+        "keyName": "pass-phrase",
+        "url": "http://localhost:45603/api/passphrase"
       }
     ]
   }

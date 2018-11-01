@@ -4,7 +4,6 @@ using API.ConfigurationData.Models.Response;
 using AutoMapper;
 using ConfigurationData.Service;
 using Domain.Models;
-using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
 using ServiceEndpointDetail = Domain.Models.ServiceEndpointDetail;
@@ -16,17 +15,7 @@ namespace API.Tests.ConfigurationData
 		private ConfigurationDataResponse SuccessfulRead(ConfigurationDataController controller)
 		{
 			var controllerResult = controller.ReadConfiguration();
-			Assert.NotNull(controllerResult);
-
-			var okResult = controllerResult.Result as OkObjectResult;
-			Assert.NotNull(okResult);
-			Assert.Equal(200, okResult.StatusCode);
-			Assert.NotNull(okResult.Value);
-
-			var result = okResult.Value as ConfigurationDataResponse;
-			Assert.NotNull(result);
-
-			return result;
+			return ControllerTestHelper<ConfigurationDataResponse>.Successful(controllerResult);
 		}
 
 		private IMapper SetupMapper(ConfigurationDataResponse expectedResponse)

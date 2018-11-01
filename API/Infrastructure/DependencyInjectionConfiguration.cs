@@ -4,6 +4,7 @@ using CheckSum.Services;
 using CheckSum.Validators;
 using ConfigurationData.Service;
 using Microsoft.Extensions.DependencyInjection;
+using Passphrase.Services;
 using ReverseCaptcha;
 
 namespace API.Infrastructure
@@ -19,6 +20,7 @@ namespace API.Infrastructure
 			services.AddScoped<IConfigurationDataRepository, ConfigurationDataRespository>();
 
 			services.AddScoped<ICheckSumService, CheckSumService>();
+			services.AddScoped<IPassPhraseService, PassPhraseService>();
 		}
 	}
 }
