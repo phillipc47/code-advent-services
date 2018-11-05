@@ -31,6 +31,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Passphrase", "Passphrase\Pa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Passphrase.Tests", "Passphrase.Tests\Passphrase.Tests.csproj", "{B764586A-5620-43F3-8898-3CF232AD6D61}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jump", "Jump\Jump.csproj", "{73CF7556-8051-406C-80D9-3750358EE40A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jump.Tests", "Jump.Tests\Jump.Tests.csproj", "{74A545C6-A9B5-4E75-9FB2-A9ADFAB52CD2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +85,14 @@ Global
 		{B764586A-5620-43F3-8898-3CF232AD6D61}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B764586A-5620-43F3-8898-3CF232AD6D61}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B764586A-5620-43F3-8898-3CF232AD6D61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73CF7556-8051-406C-80D9-3750358EE40A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73CF7556-8051-406C-80D9-3750358EE40A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73CF7556-8051-406C-80D9-3750358EE40A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73CF7556-8051-406C-80D9-3750358EE40A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74A545C6-A9B5-4E75-9FB2-A9ADFAB52CD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74A545C6-A9B5-4E75-9FB2-A9ADFAB52CD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74A545C6-A9B5-4E75-9FB2-A9ADFAB52CD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74A545C6-A9B5-4E75-9FB2-A9ADFAB52CD2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

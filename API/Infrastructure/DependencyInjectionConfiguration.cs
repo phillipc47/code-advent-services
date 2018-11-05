@@ -3,6 +3,7 @@ using API.ConfigurationData.Services;
 using CheckSum.Services;
 using CheckSum.Validators;
 using ConfigurationData.Service;
+using Jump.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Passphrase.Services;
 using ReverseCaptcha;
@@ -21,6 +22,7 @@ namespace API.Infrastructure
 
 			services.AddScoped<ICheckSumService, CheckSumService>();
 			services.AddScoped<IPassPhraseService, PassPhraseService>();
+			services.AddScoped<IStepService, StepService>();
 		}
 	}
 }

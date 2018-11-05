@@ -14,7 +14,8 @@
       "launchBrowser": true,
       //"launchUrl": "api/reverseCaptcha?input=1111",
       //"launchUrl": "api/configurationData",
-      "launchUrl": "api/checkSum?input=1, 2,  3, 4",
+      //"launchUrl": "api/checkSum?input=1, 2,  3, 4",
+      "launchUrl": "api/jump?input=0, 3, 0, 1, -3",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

@@ -13,6 +13,10 @@
       {
         "keyName": "pass-phrase",
         "url": "http://localhost:45603/api/passphrase"
+      },
+      {
+        "keyName": "exit-steps",
+        "url": "http://localhost:45603/api/jump"
       }
     ]
   }
