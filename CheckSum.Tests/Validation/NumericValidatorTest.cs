@@ -1,5 +1,5 @@
 ﻿using CheckSum.Validators;
-using Domain.Models;
+using Domain.Models.Validators;
 using Xunit;
 
 namespace CheckSum.Tests.Validation

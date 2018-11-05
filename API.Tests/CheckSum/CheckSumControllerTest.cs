@@ -3,7 +3,6 @@ using API.CheckSum;
 using API.CheckSum.Models;
 using CheckSum.Services;
 using CheckSum.Validators;
-using Domain.Models;
 using Moq;
 using Xunit;
 
@@ -11,20 +10,6 @@ namespace API.Tests.CheckSum
 {
 	public class CheckSumControllerTest
 	{
-		private Mock<INumericValidator> SetupValidator(IList<IList<int>> input, bool isValid = true)
-		{
-			var validationResult = new NumericValidationResultEntity
-			{
-				ValidationResult = {IsValid = isValid},
-				Input = input
-			};
-
-			var mockRepository = new Mock<INumericValidator>();
-			mockRepository.Setup(validator => validator.Validate(It.IsAny<string>())).Returns(validationResult);
-
-			return mockRepository;
-		}
-
 		private Mock<ICheckSumService> SetupService(IList<IList<int>> input, int calculationResult = 78)
 		{
 			var mockRepository = new Mock<ICheckSumService>();
@@ -39,14 +24,20 @@ namespace API.Tests.CheckSum
 			return ControllerTestHelper<CheckSumResponse>.Successful(controllerResult);
 		}
 
+		private CheckSumController CreateController(IMock<INumericValidator> validatorRepository, IMock<ICheckSumService> serviceRepository)
+		{
+			return new CheckSumController(validatorRepository.Object, serviceRepository.Object);
+		}
+
+
 		[Fact]
 		public void Calculate_Perfoms_Validation()
 		{
-			string input = string.Empty;
-			var validatorRepository = SetupValidator(null, false);
+			var input = string.Empty;
+			var validatorRepository = NumericValidatorTestHelper.SetupValidator(null, false);
 			var serviceRepository = SetupService(null);
 
-			var controller = new CheckSumController(validatorRepository.Object, serviceRepository.Object);
+			var controller = CreateController(validatorRepository, serviceRepository);
 			var controllerResult = controller.Calculate(input);
 
 			ControllerTestHelper<CheckSumResponse>.BadRequestResult(controllerResult);
@@ -58,18 +49,18 @@ namespace API.Tests.CheckSum
 		[Fact]
 		public void Calculate_Delegates_To_Service()
 		{
-			string input = "1 2 3, 5 6 8";
+			var input = "1 2 3, 5 6 8";
 			IList<IList<int>> numericInput = new List<IList<int>>
 			{
 				new List<int>() { 1, 2, 3 },
 				new List<int>() { 5, 6, 9 }
 			};
 
-			var validatorRepository = SetupValidator(numericInput);
+			var validatorRepository = NumericValidatorTestHelper.SetupValidator(numericInput);
 			const int expectedResult = 378929;
 			var serviceRepository = SetupService(numericInput, expectedResult);
 
-			var controller = new CheckSumController(validatorRepository.Object, serviceRepository.Object);
+			var controller = CreateController(validatorRepository, serviceRepository);
 			var result = SuccessfulCompute(controller, input);
 
 			Assert.Equal(expectedResult, int.Parse(result.Result));
