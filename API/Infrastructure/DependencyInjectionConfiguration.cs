@@ -3,6 +3,8 @@ using API.ConfigurationData.Services;
 using CheckSum.Services;
 using CheckSum.Validators;
 using ConfigurationData.Service;
+using Distributor.Services.BankSelector;
+using Distributor.Services.Distribution;
 using Jump.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Passphrase.Services;
@@ -23,6 +25,8 @@ namespace API.Infrastructure
 			services.AddScoped<ICheckSumService, CheckSumService>();
 			services.AddScoped<IPassPhraseService, PassPhraseService>();
 			services.AddScoped<IStepService, StepService>();
+			services.AddScoped<IBankSelector, BankSelectorService>();
+			services.AddScoped<IDistributionService, CircularDistributionService>();
 		}
 	}
 }
