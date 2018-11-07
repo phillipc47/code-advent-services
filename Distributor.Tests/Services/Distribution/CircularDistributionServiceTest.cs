@@ -18,14 +18,42 @@ namespace Distributor.Tests.Services.Distribution
 			return NumberHelper.CreateList(commaDelimetedList);
 		}
 
+		private IList<int> Redistribute(IDistributionService service, IList<int> memoryBanks, int startingIndex, bool expectSuccess = true)
+		{
+			var result = service.Redistribute(memoryBanks, startingIndex, out var listResult);
+
+			if (expectSuccess)
+			{
+				Assert.True(result);
+				Assert.NotNull(listResult);
+				Assert.True(memoryBanks.Count == listResult.Count);
+			}
+			else
+			{
+				Assert.False(result);
+				Assert.NotNull(listResult);
+				Assert.True(listResult.Count == 0);
+			}
+
+			return listResult;
+		}
+
+		private void CheckList(IList<int> list, IList<int> expectedResults)
+		{
+			Assert.True(list.Count == expectedResults.Count);
+
+			for (int index = 0; index < list.Count; index++)
+			{
+				Assert.True(list[index] == expectedResults[index]);
+			}
+		}
+
 		[Fact]
 		public void Redistribute_NullList_DoesNothing()
 		{
 			var service = CreateService();
 
-			var result = service.Redistribute(null, 0);
-
-			Assert.False(result);
+			Redistribute(service, null, 0, false);
 		}
 
 		[Fact]
@@ -34,10 +62,7 @@ namespace Distributor.Tests.Services.Distribution
 			var service = CreateService();
 
 			var memoryBanks = new List<int>();
-			var result = service.Redistribute(memoryBanks, 0);
-
-			Assert.False(result);
-			Assert.True(memoryBanks.Count == 0);
+			Redistribute(service, memoryBanks, 0, false);
 		}
 
 		[Theory]
@@ -48,31 +73,25 @@ namespace Distributor.Tests.Services.Distribution
 			var service = CreateService();
 
 			var memoryBanks = new List<int>() { 1, 2, 3 };
-			var result = service.Redistribute(memoryBanks, startingIndex);
+			Redistribute(service, memoryBanks, startingIndex, false);
 
-			Assert.False(result);
-			Assert.True(memoryBanks.Count == 3);
-			Assert.Equal(1, memoryBanks[0]);
-			Assert.Equal(2, memoryBanks[1]);
-			Assert.Equal(3, memoryBanks[2]);
+			CheckList(memoryBanks, new List<int>() {1, 2, 3});
 		}
 
 		[Theory]
 		[InlineData("1, 3, 0, 5", "3, 4, 1, 1", 3)]
 		[InlineData("0, 2, 7, 0", "2, 4, 1, 2", 2)]
 		[InlineData("0, 1, 2", "0, 1, 2", 0)]
-		public void Redistribute_UpdatesValues_InList(string memoryBanksString, string expectedOutputString, int startingIndex)
+		public void Redistribute_Creates_NewList(string memoryBanksString, string expectedOutputString, int startingIndex)
 		{
 			var service = CreateService();
 			var memoryBanks = CreateMemoryBanks(memoryBanksString);
 			var expectedResultBanks = CreateMemoryBanks(expectedOutputString);
 
-			var result = service.Redistribute(memoryBanks, startingIndex);
+			var result = Redistribute(service, memoryBanks, startingIndex);
 
-			Assert.True(result);
-
-			var resultList = expectedResultBanks.Except(memoryBanks).ToList();
-			Assert.True(resultList.Count == 0);
+			CheckList(memoryBanks, CreateMemoryBanks(memoryBanksString));
+			CheckList(result, expectedResultBanks);
 		}
 	}
 }

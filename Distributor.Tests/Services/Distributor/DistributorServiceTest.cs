@@ -23,10 +23,12 @@ namespace Distributor.Tests.Services.Distributor
 		{
 			var mockRepository = new Mock<IDistributionService>();
 
-			mockRepository.Setup(service => service.Redistribute(It.IsAny<IList<int>>(), It.IsAny<int>())).Returns(expectedReturnValue);
+			//mockRepository.Setup(service => service.Redistribute(It.IsAny<IList<int>>(), It.IsAny<int>())).Returns(expectedReturnValue);
 
 			return mockRepository;
 		}
+
+
 
 
 		private IDistributorService CreateService(IMock<IBankSelector> bankSelector, IMock<IDistributionService> distributionService)
@@ -38,7 +40,7 @@ namespace Distributor.Tests.Services.Distributor
 		{
 			Assert.Equal(0, result);
 			bankSelector.Verify(selector => selector.SelectBank(null, out selectorIndex), Times.Never);
-			distributionService.Verify(distribution => distribution.Redistribute(It.IsAny<IList<int>>(), It.IsAny<int>()), Times.Never);
+			//distributionService.Verify(distribution => distribution.Redistribute(It.IsAny<IList<int>>(), It.IsAny<int>()), Times.Never);
 		}
 
 		[Fact]
@@ -78,21 +80,23 @@ namespace Distributor.Tests.Services.Distributor
 			CheckNotExecuted(result, bankSelector, selectorIndex, distributionService);
 		}
 
-		[Theory]
-		[InlineData("1, 2, 3, 4")]
-		[InlineData("4")]
-		public void CountCycles_Delegates(string commaDelimetedList)
-		{
-			int selectorIndex = 2;
-			var bankSelector = CreateSelector(selectorIndex, true);
-			var distributionService = CreateDistributionService(true);
+		//TODO: Start here
+		////[Theory]
+		////[InlineData("1, 2, 3, 4", 5)]
+		////[InlineData("4")]
+		//[Fact]
+		//public void CountCycles_Delegates()
+		//{
+		//	int selectorIndex = 2;
+		//	var bankSelector = CreateSelector(selectorIndex, true);
+		//	var distributionService = CreateDistributionService(true);
 
-			var service = CreateService(bankSelector, distributionService);
+		//	var service = CreateService(bankSelector, distributionService);
 
-			var memoryBanks = NumberHelper.CreateList(commaDelimetedList);
-			var result = service.CountCycles(memoryBanks);
+		//	var memoryBanks = NumberHelper.CreateList(commaDelimetedList);
+		//	var result = service.CountCycles(memoryBanks);
 
-			Assert.Equal(1, result);
-		}
+		//	Assert.Equal(expectedCycleCount, result);
+		//}
 	}
 }

@@ -32,19 +32,22 @@ namespace Distributor.Services.Distributor
 			if (memoryBanks != null && memoryBanks.Count > 0)
 			{
 				string cyclePattern = string.Empty;
+				var distributedMemoryBanks = memoryBanks.ToList();
 				ISet<string> cyclePatterns = new HashSet<string>();
 				do
 				{
-					if (!BankSelector.SelectBank(memoryBanks, out int selectedBankIndex))
+					if (!BankSelector.SelectBank(distributedMemoryBanks, out int selectedBankIndex))
 					{
 						return 0;
 					}
 
-					cyclePattern = CreateCyclePattern(memoryBanks);
+					cyclePattern = CreateCyclePattern(distributedMemoryBanks);
 					cyclePatterns.Add(cyclePattern);
 
-					int distributionIndex = DetermineDistributionIndex(memoryBanks, selectedBankIndex);
-					DistributionService.Redistribute(memoryBanks, distributionIndex);
+					int distributionIndex = DetermineDistributionIndex(distributedMemoryBanks, selectedBankIndex);
+					DistributionService.Redistribute(distributedMemoryBanks, distributionIndex, out var resultsOfDistribution);
+					distributedMemoryBanks = resultsOfDistribution.ToList();
+
 					cycleCount += 1;
 				} while (!cyclePatterns.Contains(cyclePattern));
 			}
