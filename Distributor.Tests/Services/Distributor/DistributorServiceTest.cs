@@ -2,7 +2,6 @@
 using Distributor.Services.BankSelector;
 using Distributor.Services.Distribution;
 using Distributor.Services.Distributor;
-using Domain.Helpers.Number;
 using Moq;
 using Xunit;
 
@@ -10,26 +9,17 @@ namespace Distributor.Tests.Services.Distributor
 {
 	public class DistributorServiceTest
 	{
-		private Mock<IBankSelector> CreateSelector(int expectedIndex, bool expectedReturnValue)
+		private Mock<IBankSelector> CreateSelector()
 		{
 			var mockRepository = new Mock<IBankSelector>();
-
-			mockRepository.Setup(selector => selector.SelectBank(It.IsAny<IList<int>>(), out expectedIndex)).Returns(expectedReturnValue);
-
 			return mockRepository;
 		}
 
-		private Mock<IDistributionService> CreateDistributionService(bool expectedReturnValue)
+		private Mock<IDistributionService> CreateDistributionService()
 		{
 			var mockRepository = new Mock<IDistributionService>();
-
-			//mockRepository.Setup(service => service.Redistribute(It.IsAny<IList<int>>(), It.IsAny<int>())).Returns(expectedReturnValue);
-
 			return mockRepository;
 		}
-
-
-
 
 		private IDistributorService CreateService(IMock<IBankSelector> bankSelector, IMock<IDistributionService> distributionService)
 		{
@@ -40,26 +30,17 @@ namespace Distributor.Tests.Services.Distributor
 		{
 			Assert.Equal(0, result);
 			bankSelector.Verify(selector => selector.SelectBank(null, out selectorIndex), Times.Never);
-			//distributionService.Verify(distribution => distribution.Redistribute(It.IsAny<IList<int>>(), It.IsAny<int>()), Times.Never);
-		}
 
-		[Fact]
-		public void foo()
-		{
-			var selector = CreateSelector(1, true);
-			var distributionService = CreateDistributionService(true);
-
-			var service = CreateService(selector, distributionService);
-			//service.CountCycles()
-
+			IList<int> list = new List<int>();
+			distributionService.Verify(distribution => distribution.Redistribute(It.IsAny<IList<int>>(), It.IsAny<int>(), out list), Times.Never);
 		}
 
 		[Fact]
 		public void CountCycles_NullMemoryBanks()
 		{
 			int selectorIndex = 1;
-			var bankSelector = CreateSelector(selectorIndex, true);
-			var distributionService = CreateDistributionService(true);
+			var bankSelector = CreateSelector();
+			var distributionService = CreateDistributionService();
 
 			var service = CreateService(bankSelector, distributionService);
 			var result = service.CountCycles(null);
@@ -71,8 +52,8 @@ namespace Distributor.Tests.Services.Distributor
 		public void CountCycles_EmptyMemoryBanks()
 		{
 			int selectorIndex = 1;
-			var bankSelector = CreateSelector(selectorIndex, true);
-			var distributionService = CreateDistributionService(true);
+			var bankSelector = CreateSelector();
+			var distributionService = CreateDistributionService();
 
 			var service = CreateService(bankSelector, distributionService);
 			var result = service.CountCycles(new List<int>());
@@ -80,23 +61,56 @@ namespace Distributor.Tests.Services.Distributor
 			CheckNotExecuted(result, bankSelector, selectorIndex, distributionService);
 		}
 
-		//TODO: Start here
-		////[Theory]
-		////[InlineData("1, 2, 3, 4", 5)]
-		////[InlineData("4")]
-		//[Fact]
-		//public void CountCycles_Delegates()
-		//{
-		//	int selectorIndex = 2;
-		//	var bankSelector = CreateSelector(selectorIndex, true);
-		//	var distributionService = CreateDistributionService(true);
+		[Fact]
+		public void CountCycles_NoBankSelected()
+		{
+			var bankSelector = CreateSelector();
 
-		//	var service = CreateService(bankSelector, distributionService);
+			int notUsed = 0;
+			bankSelector.Setup(selector => selector.SelectBank(It.IsAny<IList<int>>(), out notUsed)).Returns(false);
 
-		//	var memoryBanks = NumberHelper.CreateList(commaDelimetedList);
-		//	var result = service.CountCycles(memoryBanks);
+			var distributionService = CreateDistributionService();
 
-		//	Assert.Equal(expectedCycleCount, result);
-		//}
+			var service = CreateService(bankSelector, distributionService);
+			var result = service.CountCycles(new List<int>() { 1, 1, 3 });
+
+			Assert.Equal(0, result);
+		}
+
+		[Fact]
+		public void CountCycles_RedistributionFails()
+		{
+			var bankSelector = CreateSelector();
+
+			int selectedBankIndex = 2;
+			bankSelector.Setup(selector => selector.SelectBank(It.IsAny<IList<int>>(), out selectedBankIndex)).Returns(true);
+
+			var distributionService = CreateDistributionService();
+			IList<int> notUsed = new List<int>();
+			distributionService.Setup(distribution => distribution.Redistribute(It.IsAny<IList<int>>(), 0, out notUsed)).Returns(false);
+
+			var service = CreateService(bankSelector, distributionService);
+			var result = service.CountCycles(new List<int>() { 1, 1, 3 });
+
+			Assert.Equal(0, result);
+		}
+
+		[Fact]
+		public void CountCycles_OnePass()
+		{
+			var bankSelector = CreateSelector();
+
+			int selectedBankIndex = 2;
+			bankSelector.Setup(selector => selector.SelectBank(It.IsAny<IList<int>>(), out selectedBankIndex)).Returns(true);
+
+			var distributionService = CreateDistributionService();
+			IList<int> distributionResult = new List<int>() { 2, 2, 1 };
+			distributionService.Setup(distribution => distribution.Redistribute(It.IsAny<IList<int>>(), 0, out distributionResult)).Returns(true);
+
+			var service = CreateService(bankSelector, distributionService);
+			var result = service.CountCycles(new List<int>() { 2, 2, 1 });
+
+			Assert.Equal(1, result);
+		}
 	}
 }

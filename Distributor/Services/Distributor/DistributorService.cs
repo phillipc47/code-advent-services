@@ -28,10 +28,12 @@ namespace Distributor.Services.Distributor
 
 		public int CountCycles(IList<int> memoryBanks)
 		{
+			// Yep, the copying back and forth of the list gets really inefficient, maybe look at this later if it becomes a performance concern
+
 			int cycleCount = 0;
 			if (memoryBanks != null && memoryBanks.Count > 0)
 			{
-				string cyclePattern = string.Empty;
+				string cyclePattern;
 				var distributedMemoryBanks = memoryBanks.ToList();
 				ISet<string> cyclePatterns = new HashSet<string>();
 				do
@@ -45,7 +47,10 @@ namespace Distributor.Services.Distributor
 					cyclePatterns.Add(cyclePattern);
 
 					int distributionIndex = DetermineDistributionIndex(distributedMemoryBanks, selectedBankIndex);
-					DistributionService.Redistribute(distributedMemoryBanks, distributionIndex, out var resultsOfDistribution);
+					if (!DistributionService.Redistribute(distributedMemoryBanks, distributionIndex, out var resultsOfDistribution))
+					{
+						return 0;
+					}
 					distributedMemoryBanks = resultsOfDistribution.ToList();
 
 					cycleCount += 1;
