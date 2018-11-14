@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using API.Jump.Models;
+﻿using API.Jump.Models;
 using CheckSum.Validators;
+using Domain.Helpers.Number;
 using Jump.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,13 +12,6 @@ namespace API.Jump
 	{
 		private INumericValidator Validator { get; }
 		private IStepService Service { get; }
-
-		// Can be made generic if the need arises
-		private IList<int> Flatten(IList<IList<int>> sourceLists)
-		{
-			IList<int> flattenedList = new List<int>();
-			return sourceLists.Aggregate(flattenedList, (current, currentList) => current.Concat(currentList).ToList());
-		}
 
 		public JumpController(INumericValidator validator, IStepService service)
 		{
@@ -36,7 +28,7 @@ namespace API.Jump
 				return BadRequest(numericValidationResult.ValidationResult.Messages);
 			}
 
-			var jumpOffsets = Flatten(numericValidationResult.Input);
+			var jumpOffsets = NumberHelper.Flatten(numericValidationResult.Input);
 			var response = new ExitStepResponse()
 			{
 				Input = input,

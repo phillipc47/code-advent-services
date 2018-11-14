@@ -17,6 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\CheckSum\CheckSum.csproj" />
     <ProjectReference Include="..\ConfigurationData\ConfigurationData.csproj" />
+    <ProjectReference Include="..\Distributor\Distributor.csproj" />
     <ProjectReference Include="..\Domain\Domain.csproj" />
     <ProjectReference Include="..\Jump\Jump.csproj" />
     <ProjectReference Include="..\Passphrase\Passphrase.csproj" />

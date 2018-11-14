@@ -17,6 +17,10 @@
       {
         "keyName": "exit-steps",
         "url": "http://localhost:45603/api/jump"
+      },
+      {
+        "keyName": "distributor",
+        "url": "http://localhost:45603/api/distributor"
       }
     ]
   }
