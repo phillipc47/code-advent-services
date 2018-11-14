@@ -15,11 +15,6 @@ namespace Distributor.Services.Distributor
 			return string.Join(", ", memoryBanks.Select(block => block.ToString()).ToArray());
 		}
 
-		private int DetermineDistributionIndex(IList<int> memoryBanks, int selectedBankIndex)
-		{
-			return (selectedBankIndex + 1) % memoryBanks.Count;
-		}
-
 		public DistributorService(IBankSelector bankSelector, IDistributionService distributionService)
 		{
 			BankSelector = bankSelector;
@@ -29,11 +24,12 @@ namespace Distributor.Services.Distributor
 		public int CountCycles(IList<int> memoryBanks)
 		{
 			// Yep, the copying back and forth of the list gets really inefficient, maybe look at this later if it becomes a performance concern
+			// For now, didn't want to modify incoming data, that just felt wrong, which led to out params, etc...
 
 			int cycleCount = 0;
 			if (memoryBanks != null && memoryBanks.Count > 0)
 			{
-				string cyclePattern;
+				string nextCyclePattern;
 				var distributedMemoryBanks = memoryBanks.ToList();
 				ISet<string> cyclePatterns = new HashSet<string>();
 				do
@@ -42,19 +38,17 @@ namespace Distributor.Services.Distributor
 					{
 						return 0;
 					}
+					cyclePatterns.Add(CreateCyclePattern(distributedMemoryBanks));
 
-					cyclePattern = CreateCyclePattern(distributedMemoryBanks);
-					cyclePatterns.Add(cyclePattern);
-
-					int distributionIndex = DetermineDistributionIndex(distributedMemoryBanks, selectedBankIndex);
-					if (!DistributionService.Redistribute(distributedMemoryBanks, distributionIndex, out var resultsOfDistribution))
+					if (!DistributionService.Redistribute(distributedMemoryBanks, selectedBankIndex, out var resultsOfDistribution))
 					{
 						return 0;
 					}
-					distributedMemoryBanks = resultsOfDistribution.ToList();
 
+					nextCyclePattern = CreateCyclePattern(resultsOfDistribution);
+					distributedMemoryBanks = resultsOfDistribution.ToList();
 					cycleCount += 1;
-				} while (!cyclePatterns.Contains(cyclePattern));
+				} while (!cyclePatterns.Contains(nextCyclePattern));
 			}
 
 			return cycleCount;

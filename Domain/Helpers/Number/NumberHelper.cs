@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Domain.Helpers.Number
 {
-	public static class NumberHelper
+	public class NumberHelper 
 	{
 		public  static IList<int> CreateList(string commaDelimetedList)
 		{

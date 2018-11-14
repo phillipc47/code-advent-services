@@ -105,7 +105,7 @@ namespace Distributor.Tests.Services.Distributor
 
 			var distributionService = CreateDistributionService();
 			IList<int> distributionResult = new List<int>() { 2, 2, 1 };
-			distributionService.Setup(distribution => distribution.Redistribute(It.IsAny<IList<int>>(), 0, out distributionResult)).Returns(true);
+			distributionService.Setup(distribution => distribution.Redistribute(It.IsAny<IList<int>>(), selectedBankIndex, out distributionResult)).Returns(true);
 
 			var service = CreateService(bankSelector, distributionService);
 			var result = service.CountCycles(new List<int>() { 2, 2, 1 });
